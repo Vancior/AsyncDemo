@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AsyncDemo</string>
+    <string name="bufferSize">bufferSize: %1$d</string>
+</resources>
