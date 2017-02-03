@@ -1,5 +1,8 @@
 package com.vancior.noteparserdemo.util;
 
+import android.util.Log;
+
+import com.vancior.noteparserdemo.bean.Chord;
 import com.vancior.noteparserdemo.bean.Note;
 
 import org.xml.sax.Attributes;
@@ -19,38 +22,57 @@ import javax.xml.parsers.SAXParserFactory;
 
 public class NoteParser {
 
-    public List<Note> parse(InputStream is) throws Exception {
+    private static String TAG = "NoteParser";
+
+    public List<Chord> parse(InputStream is) throws Exception {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
         MyHandler handler = new MyHandler();
         parser.parse(is, handler);
-        return handler.getNotes();
+        return handler.getChords();
     }
 
     private class MyHandler extends DefaultHandler {
 
-        private List<Note> notes;
+        private List<Chord> chords;
         private Note note;
+        private Chord chord;
         private StringBuilder builder;
         private boolean isValid;
+        private boolean isChord;
+        private boolean isTie;
+        private boolean isRight;
 
-        public List<Note> getNotes() {
-            return notes;
+        public List<Chord> getChords() {
+            return chords;
         }
 
         @Override
         public void startDocument() throws SAXException {
             super.startDocument();
-            notes = new ArrayList<>();
+            chords = new ArrayList<>();
             builder = new StringBuilder();
         }
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             super.startElement(uri, localName, qName, attributes);
-            if (localName.equals("note")) {
+            if (localName.equals("measure")) {
+                isRight = true;
+            } else if (localName.equals("backup")) {
+                isRight = false;
+            } else if (localName.equals("note")) {
                 note = new Note();
                 isValid = true;
+                isChord = false;
+                isTie = false;
+            } else if (localName.equals("rest")) {
+                isValid = false;
+            } else if (localName.equals("chord")) {
+//                Log.d(TAG, "startElement: Chord");
+                isChord = true;
+            } else if (localName.equals("tie") && attributes.getValue("type").equals("stop")) {
+                isTie = true;
             }
             builder.setLength(0);
         }
@@ -64,16 +86,28 @@ public class NoteParser {
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
             super.endElement(uri, localName, qName);
-            if (localName.equals("rest")) {
-                isValid = false;
-            } else if (localName.equals("step")) {
+            if (localName.equals("step")) {
                 note.setPitchStep(builder.toString().charAt(0));
             } else if (localName.equals("octave")) {
                 note.setPitchOctave(Integer.parseInt(builder.toString()));
             } else if (localName.equals("duration")) {
                 note.setDuration(Float.parseFloat(builder.toString()));
-            } else if (localName.equals("note") && isValid) {
-                notes.add(note);
+            } else if (localName.equals("note") && isValid && isRight) {
+                if (isChord) {
+                    if (!isTie) {
+                        chord.addNote(note);
+//                        Log.d(TAG, "endElement: " + note.getPitchStep());
+                    }
+                } else {
+                    if (chord != null) {
+                        Log.d(TAG, "endElement: " + chord.toString());
+                        chords.add(chord);
+                    }
+                    chord = new Chord();
+                    if (!isTie) {
+                        chord.addNote(note);
+                    }
+                }
             }
         }
 
