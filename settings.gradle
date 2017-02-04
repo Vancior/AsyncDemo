@@ -1,1 +1,1 @@
-include ':app', ':noteparserdemo'
+include ':app', ':noteparserdemo', ':mergedemo'

@@ -50,7 +50,7 @@ public class UpdateUI extends Thread {
         }
         for (int i = 0; i <= 400; i += 100) {
             AxisValue value = new AxisValue(i);
-            String label = "";
+            String label = "" + i;
             value.setLabel(label);
             axisValuesY.add(value);
         }

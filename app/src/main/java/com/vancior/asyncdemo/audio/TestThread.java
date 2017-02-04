@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import junit.framework.Test;
+
 import static com.vancior.asyncdemo.task.Revise.revise;
 import static com.vancior.asyncdemo.audio.UpdateUI.initLineChart;
 import static com.vancior.asyncdemo.audio.UpdateUI.sound;
@@ -41,7 +43,7 @@ public class TestThread extends Thread {
 
     @Override
     public void run() {
-        int sampleRate = 22050;
+        int sampleRate = 44100;
         int bufferSize = AudioRecord.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
         bufferSize = 8192;
 //        bufferSize = 1024;
@@ -114,7 +116,8 @@ public class TestThread extends Thread {
 
                 sound = spectrumArray;
 
-                String send = getNotation();
+//                String send = getNotation();
+                String send = TestNotation();
                 if (send != "") {
                     Message message = handler.obtainMessage();
                     Bundle bundle = new Bundle();
@@ -133,6 +136,25 @@ public class TestThread extends Thread {
 
         record.stop();
         record.release();
+    }
+
+    private String TestNotation() {
+        String result = "";
+        double left, middle, right;
+        int i = (int) (temperament[0] / step), end = (int) (temperament[temperament.length - 1] / step + 1);
+//        Log.d("Notation", "succeed");
+        for (; i < end; ++i) {
+            left = spectrumArray[i - 1];
+            middle = spectrumArray[i];
+            right = spectrumArray[i + 1];
+            if (middle-left > 20 && middle-right > 20) {
+                result = String.format("%.2f", i*step);
+            }
+        }
+        if (result != "")
+            Log.d("String", result);
+
+        return result;
     }
 
     private String getNotation() {
