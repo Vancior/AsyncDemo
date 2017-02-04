@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
+import com.vancior.noteparserdemo.bean.Chord;
 import com.vancior.noteparserdemo.bean.Note;
 import com.vancior.noteparserdemo.util.NoteParser;
 
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private PDFView pdfView;
     private Button buttonPrevious;
     private Button buttonNext;
-    private List<Note> notes;
+    private List<Chord> chords;
 
     private int currentPage;
     private int maxPages;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (currentPage == 0)
-                    Toast.makeText(MainActivity.this, "Already in the rear", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Already in the head", Toast.LENGTH_SHORT).show();
                 else
                     pdfView.jumpTo(currentPage - 1, false);
             }
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (currentPage == maxPages-1)
-                    Toast.makeText(MainActivity.this, "Already in the tail", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Already in the rear", Toast.LENGTH_SHORT).show();
                 else
                     pdfView.jumpTo(currentPage + 1, false);
             }
@@ -79,25 +80,25 @@ public class MainActivity extends AppCompatActivity {
             //temporary: open xml in assets
             InputStream is = getAssets().open("test.xml");
             NoteParser parser = new NoteParser();
-            notes = parser.parse(is);
+            chords = parser.parse(is);
         } catch (Exception e) {
-            Log.d(TAG, "parseSheet: Exception!");
+            Log.d(TAG, "parseSheet: ");
+            e.printStackTrace();
         }
     }
 
     private void displayNotation() {
-        if (notes == null) {
+        if (chords == null) {
             Log.e(TAG, "display: notes is null");
             return;
         }
 
         String result = "";
-        for (Note i : notes) {
-            result += i.getPitchStep() + " ";
-            result += i.getPitchOctave() + " ";
-            result += i.getDuration() + " ";
+        for (Chord i : chords) {
+            result += i.toString() + "\n";
         }
         textView1.setText(result);
+        Log.d(TAG, "displayNotation: " + result);
     }
 
     private void displayPdf() {
