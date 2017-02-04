@@ -14,6 +14,7 @@ public class Chord {
     private static String TAG = "Chord";
 
     private List<Note> notes;
+    private boolean newPage = false;
 
     public Chord() {
         notes = new ArrayList<>();
@@ -22,6 +23,14 @@ public class Chord {
     public void addNote(Note note) {
         notes.add(note);
 //        Log.d(TAG, "addNote: " + note.getPitchStep());
+    }
+
+    public void setNewPage(boolean newPage) {
+        this.newPage = newPage;
+    }
+
+    public boolean getNewPage() {
+        return newPage;
     }
 
     public List<Note> getChord() {
@@ -34,6 +43,8 @@ public class Chord {
         for (Note i: notes) {
             result += String.valueOf(i.getPitchStep()) + i.getPitchOctave() + " ";
         }
+        if (newPage)
+            result += "new-page = yes";
         return result;
     }
 }

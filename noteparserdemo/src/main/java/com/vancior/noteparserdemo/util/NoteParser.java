@@ -73,6 +73,10 @@ public class NoteParser {
                 isChord = true;
             } else if (localName.equals("tie") && attributes.getValue("type").equals("stop")) {
                 isTie = true;
+            } else if (localName.equals("print") && attributes.getValue("new-page") != null
+                    && attributes.getValue("new-page").equals("yes")) {
+                if (chord != null)
+                    chord.setNewPage(true);
             }
             builder.setLength(0);
         }
@@ -108,6 +112,15 @@ public class NoteParser {
                         chord.addNote(note);
                     }
                 }
+            }
+        }
+
+        @Override
+        public void endDocument() throws SAXException {
+            super.endDocument();
+            if (chord != null) {
+                Log.d(TAG, "endDocument: " + chord.toString());
+                chords.add(chord);
             }
         }
 
