@@ -46,11 +46,16 @@ public class TestThread extends Thread {
     private double[] spectrumArray;
     private List<Chord> chordList;
     private Chord currentChord;
+    private Chord nextChord;
     private int current = 0;
+    private int chordsLength;
+    private boolean newPage;
 
     public TestThread(Handler handler, List<Chord> chordList) {
         this.handler = handler;
         this.chordList = chordList;
+        chordsLength = this.chordList.size();
+        newPage = false;
     }
 
     public void setRunning(boolean b) {
@@ -82,14 +87,18 @@ public class TestThread extends Thread {
 
                 length = spectrumArray.length;
 
-                if (testNotation()) {
-                    String send = "OK";
-                    Message message = handler.obtainMessage();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("Note", send);
-                    message.setData(bundle);
-                    handler.sendMessage(message);
-                    Log.d("Send", "succeed");
+                if (current < chordsLength && testNotation()) {
+                    if (newPage) {
+                        String send = "OK";
+                        Message message = handler.obtainMessage();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("Note", send);
+                        message.setData(bundle);
+                        handler.sendMessage(message);
+                        Log.d("Send", "succeed");
+
+                        newPage = false;
+                    }
                 }
 
             }
@@ -106,6 +115,7 @@ public class TestThread extends Thread {
         List<Note> noteList;
 
         noteList = chordList.get(current).getChord();
+
         for (Note j : noteList) {
             String temp = "";
             temp += j.getPitchStep();
@@ -127,6 +137,8 @@ public class TestThread extends Thread {
         }
         if (result) {
             Log.d(TAG, "testNotation: " + chordList.get(current).toString());
+            if (chordList.get(current).getNewPage())
+                newPage = true;
             current++;
         }
         return result;
