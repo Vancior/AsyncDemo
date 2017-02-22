@@ -96,6 +96,8 @@ public class NoteParser {
                 note.setPitchOctave(Integer.parseInt(builder.toString()));
             } else if (localName.equals("duration")) {
                 note.setDuration(Float.parseFloat(builder.toString()));
+            } else if (localName.equals("alter")) {
+                note.setAlter(Integer.parseInt(builder.toString()));
             } else if (localName.equals("note") && isValid && isRight) {
                 if (isChord) {
                     if (!isTie) {

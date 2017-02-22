@@ -122,7 +122,8 @@ public class TestThread extends Thread {
             String temp = "";
             temp += j.getPitchStep();
             temp += j.getPitchOctave();
-            left = (int) (temperament[toneIndex.get(temp)] / step);
+            //use alter to get the right temperament
+            left = (int) (temperament[toneIndex.get(temp) + j.getAlter()] / step);
             right = left + 1;
             int left2 = left - 1;
             if (spectrumArray[left2] < 50.0 && spectrumArray[left] < 50.0 && spectrumArray[right] < 50.0) {

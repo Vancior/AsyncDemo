@@ -1,5 +1,7 @@
 package com.vancior.mergedemo;
 
+import android.content.Context;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Context context = this.getApplicationContext();
+        Log.d(TAG, "onCreate: " + context.getCacheDir());
+        Log.d(TAG, "onCreate: " + context.getFilesDir());
+        Log.d(TAG, "onCreate: " + context.getExternalCacheDir());
+        Log.d(TAG, "onCreate: " + Environment.getExternalStorageDirectory());
 
         pdfView = (PDFView) findViewById(R.id.pdfView);
         displayPdf();
