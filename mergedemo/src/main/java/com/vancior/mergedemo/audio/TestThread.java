@@ -126,16 +126,28 @@ public class TestThread extends Thread {
             left = (int) (temperament[toneIndex.get(temp) + j.getAlter()] / step);
             right = left + 1;
             int left2 = left - 1;
-            if (spectrumArray[left2] < 50.0 && spectrumArray[left] < 50.0 && spectrumArray[right] < 50.0) {
+//            if (spectrumArray[left2] < 50.0 && spectrumArray[left] < 50.0 && spectrumArray[right] < 50.0) {
+//                result = false;
+//            } else {
+//                String msg = (left-2)*step + ": " + spectrumArray[left-2] + " " + (left-1)*step + ": " + spectrumArray[left-1] +
+//                        " " + left*step + ": " + spectrumArray[left] + " " + (left+1)*step + ": " + spectrumArray[left+1] +
+//                        " " + (left+2)*step + ": " + spectrumArray[left+2];
+//                Log.d(TAG, "testNotation: " + msg);
+//            }
+//            if (!result)
+//                break;
+
+            if (spectrumArray[left] < 50.0 && spectrumArray[right] < 50.0) {
                 result = false;
             } else {
                 String msg = (left-2)*step + ": " + spectrumArray[left-2] + " " + (left-1)*step + ": " + spectrumArray[left-1] +
                         " " + left*step + ": " + spectrumArray[left] + " " + (left+1)*step + ": " + spectrumArray[left+1] +
                         " " + (left+2)*step + ": " + spectrumArray[left+2];
-                Log.d(TAG, "testNotation: " + msg);
+//                Log.d(TAG, "testNotation: " + msg);
             }
             if (!result)
                 break;
+
             Log.d(TAG, "testNotation: " + left + " " + right);
         }
         if (result) {

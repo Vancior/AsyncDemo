@@ -57,9 +57,9 @@ public class NoteParser {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             super.startElement(uri, localName, qName, attributes);
-            if (localName.equals("measure")) {
+            if (localName.equals("part") && attributes.getValue("id").equals("P1")) {
                 isRight = true;
-            } else if (localName.equals("backup")) {
+            } else if (localName.equals("part") && (!attributes.getValue("id").equals("P1"))) {
                 isRight = false;
             } else if (localName.equals("note")) {
                 note = new Note();
