@@ -9,6 +9,7 @@ public class Note {
     private char pitchStep;
     private int pitchOctave;
     private float duration;
+    private int alter;
 
     public Note() { }
 
@@ -30,6 +31,10 @@ public class Note {
         this.duration = duration;
     }
 
+    public void setAlter(int alter) {
+        this.alter = alter;
+    }
+
     public char getPitchStep() {
         return pitchStep;
     }
@@ -40,5 +45,9 @@ public class Note {
 
     public float getDuration() {
         return duration;
+    }
+
+    public int getAlter() {
+        return alter;
     }
 }

@@ -57,9 +57,9 @@ public class NoteParser {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             super.startElement(uri, localName, qName, attributes);
-            if (localName.equals("measure")) {
+            if (localName.equals("part") && attributes.getValue("id").equals("P1")) {
                 isRight = true;
-            } else if (localName.equals("backup")) {
+            } else if (localName.equals("part") && (!attributes.getValue("id").equals("P1"))) {
                 isRight = false;
             } else if (localName.equals("note")) {
                 note = new Note();
@@ -96,6 +96,8 @@ public class NoteParser {
                 note.setPitchOctave(Integer.parseInt(builder.toString()));
             } else if (localName.equals("duration")) {
                 note.setDuration(Float.parseFloat(builder.toString()));
+            } else if (localName.equals("alter")) {
+                note.setAlter(Integer.parseInt(builder.toString()));
             } else if (localName.equals("note") && isValid && isRight) {
                 if (isChord) {
                     if (!isTie) {
